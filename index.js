@@ -1,9 +1,7 @@
 const dotenv = require("dotenv")
-const express = require("express")
+const router = require("./routes/routes")
 
-// Import utilities
-const redisUtil = require("./utils/redisUtil")
-const weatherUtil = require("./utils/weatherApiUtil")
+const express = require("express")
 
 // Set up .env file
 dotenv.config()
@@ -17,8 +15,8 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-// Set up middleware for caching and retrieving alert data
-app.get("/alerts/active", redisUtil.cacheData, weatherUtil.getAlertData)
+// Use the router
+app.use(router)
 
 // Start the server
 app.listen(PORT, () => {
