@@ -3,7 +3,7 @@ const redisUtil = require("./redisUtil")
 const validStateCodes = require("./validStateCodes")
 
 // GET from National Weather Service API
-async function fetchActveAlerts(area) {
+async function fetchActiveAlerts(area) {
     console.log(`- Fetching active alerts from ${area}`)
     try {
         const response = await axios.get(`https://api.weather.gov/alerts/active?area=${area}`)
@@ -18,7 +18,7 @@ async function fetchActveAlerts(area) {
 function validateAlertInput(input) {
     // Ideally, validation will check input against a list of valid items in a database
     // In this case, state postal abbreviations are common knowledge and we will check against them here
-    const stateAbbreviations = validStateCodes.stateList
+    const stateAbbreviations = validStateCodes
 
     // Define the regular expression for state codes
     const stateRegex = /^[A-Z]{2}$/
@@ -54,7 +54,7 @@ async function getAlertData(area) {
             } else {
 
                 // If it is not in the cache, fetch from the Weather API
-                results = await fetchActveAlerts(area)
+                results = await fetchActiveAlerts(area)
                 if(results.length === 0) {
                     throw new Error("NotFound")
                 }
@@ -76,5 +76,6 @@ async function getAlertData(area) {
 }
 
 module.exports = {
-    getAlertData
+    getAlertData,
+    validateAlertInput
 }

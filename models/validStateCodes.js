@@ -51,6 +51,4 @@ const stateList = [
     "WY"  // Wyoming
 ]
 
-module.exports = {
-    stateList 
-}
+module.exports = stateList

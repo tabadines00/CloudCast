@@ -20,20 +20,27 @@ if(process.env.REDIS_PORT && process.env.REDIS_HOST) {
 // Create Redis Client to interface with Redis
 let redisClient
 
-(async () => {
-    console.log(`Connecting to Redis at ${redis_host}:${redis_port}`)
-    // Attempt to connect to localhost on port 6379 by default
-    redisClient = redis.createClient({
-        port: redis_port,
-        host: redis_host,
-        enable_offline_queue: false
-    })
-    redisClient.on("error", (error) => {
-        console.error(error.toString())
-    })
-    await redisClient.connect()
-    console.log(`Connected to Redis at ${redis_host}:${redis_port}`)
-})()
+async function initClient() {
+    if(!redisClient) {
+        console.log(`Connecting to Redis at ${redis_host}:${redis_port}`)
+        // Attempt to connect to localhost on port 6379 by default
+        redisClient = redis.createClient({
+            port: redis_port,
+            host: redis_host,
+            enable_offline_queue: false
+        })
+        redisClient.on("error", (error) => {
+            console.error(error.toString())
+        })
+        await redisClient.connect()
+        console.log(`Connected to Redis at ${redis_host}:${redis_port}`)
+    }
+    return true 
+}
+
+async function quit() {
+    return await redisClient.disconnect()
+}
 
 // Public function to check if Redis is ready and connected
 function isConnected() {
@@ -58,5 +65,7 @@ async function get(key) {
 module.exports = {
     set,
     get,
+    initClient,
+    quit,
     isConnected
 }
