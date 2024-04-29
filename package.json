@@ -1,7 +1,7 @@
 {
   "name": "cloudcast",
   "version": "1.0.0",
-  "description": "Condensing data from the weather.gov API with caching and containerization.",
+  "description": "Condensing data from the weather.gov API with caching.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
