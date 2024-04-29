@@ -1,6 +1,6 @@
 const activeAlertsModel = require("../models/activeAlertsModel")
 
-// Interface with the model layer
+// Interface with the model layer with activeAlertsModel
 async function get(req, res, next) {
     let area = req.query.area
     try {

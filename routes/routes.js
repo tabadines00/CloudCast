@@ -15,7 +15,7 @@ router.use(activeAlertsController.errorHandler)
 // router.use(pointsController.errorHandler)
 // router.use(gridPointsController.errorHandler)
 
-// Default route for unhandled routes sent to 404
+// Default response for unhandled routes are sent to 404
 router.get("*", (req, res) => {
     res.status(404).send("404 Not Found")
 })
