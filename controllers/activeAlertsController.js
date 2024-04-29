@@ -1,10 +1,10 @@
-const weatherUtil = require("../models/weatherApiModel")
+const activeAlertsModel = require("../models/activeAlertsModel")
 
 // Interface with the model layer
 async function get(req, res, next) {
     let area = req.query.area
     try {
-        let results = await weatherUtil.getAlertData(area)
+        let results = await activeAlertsModel.getAlertData(area)
         res.send(results)
     } catch (error) {
         console.error(error)

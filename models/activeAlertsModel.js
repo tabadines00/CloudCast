@@ -3,7 +3,7 @@ const redisUtil = require("./redisUtil")
 const validStateCodes = require("./validStateCodes")
 
 // GET from National Weather Service API
-async function fetchWeatherAPI(area) {
+async function fetchActveAlerts(area) {
     console.log(`- Fetching active alerts from ${area}`)
     try {
         const response = await axios.get(`https://api.weather.gov/alerts/active?area=${area}`)
@@ -33,12 +33,12 @@ function validateAlertInput(input) {
 
 // Get and return requested data after checking the cache
 async function getAlertData(area) {
-    console.log(`Requested Alert Area: ${area}`)
     let results
     let isCached = false
 
     // Validate the user input
     if (validateAlertInput(area)) {
+        console.log(`Requested Alert Area: ${area}`)
 
         // Check the cache to see if the current query is already cached
         const cachedResults = await redisUtil.redisClient.get(area)
@@ -50,7 +50,7 @@ async function getAlertData(area) {
         } else {
 
             // If it is not in the cache, fetch from the Weather API
-            results = await fetchWeatherAPI(area)
+            results = await fetchActveAlerts(area)
             if(results.length === 0) {
                 throw new Error("NotFound")
             }

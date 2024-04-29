@@ -2,14 +2,22 @@ const express = require("express")
 const router = express.Router()
 
 // Import Controllers
-const controller = require("../controllers/weatherApiController")
+const activeAlertsController = require("../controllers/activeAlertsController")
 
 // Active Alerts Route and error handler
-router.get("/alerts/active", controller.get)
-router.use(controller.errorHandler)
+router.get("/alerts/active", activeAlertsController.get)
+router.use(activeAlertsController.errorHandler)
 
-// Other API Routes would go here, e.g.
-// router.get("/points/", controller.get)
-// router.get("/gridpoints/", controller.get)
+// Other API Routes and error handlers would go here, e.g.
+// router.get("/points/", pointsController.get)
+// router.get("/gridpoints/", gridPointsController.get)
+
+// router.use(pointsController.errorHandler)
+// router.use(gridPointsController.errorHandler)
+
+// Default route for unhandled routes sent to 404
+router.get("*", (req, res) => {
+    res.status(404).send("404 Not Found")
+})
 
 module.exports = router
