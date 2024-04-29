@@ -39,29 +39,32 @@ async function getAlertData(area) {
     // Validate the user input
     if (validateAlertInput(area)) {
         console.log(`Requested Alert Area: ${area}`)
+        
+        // Only continue if the Redis Cache is initialized and ready
+        if(redisUtil.isConnected()) {
 
-        // Check the cache to see if the current query is already cached
-        const cachedResults = await redisUtil.redisClient.get(area)
-        if(cachedResults) {
-            results = JSON.parse(cachedResults)
-            isCached = true
-            console.log(`- Alert results for ${area} have been retrieved from cache.`)
+            // Check the cache to see if the current query is already cached
+            const cachedResults = await redisUtil.get(area)
 
+            if(cachedResults) {
+                results = JSON.parse(cachedResults)
+                isCached = true
+                console.log(`- Alert results for ${area} have been retrieved from cache.`)
+
+            } else {
+
+                // If it is not in the cache, fetch from the Weather API
+                results = await fetchActveAlerts(area)
+                if(results.length === 0) {
+                    throw new Error("NotFound")
+                }
+
+                // Cache the new data in Redis
+                await redisUtil.set(area, results)
+                console.log(`- Alert results for ${area} have been cached.`)
+            }
         } else {
-
-            // If it is not in the cache, fetch from the Weather API
-            results = await fetchActveAlerts(area)
-            if(results.length === 0) {
-                throw new Error("NotFound")
-            }
-
-            // Cache the new results with an expiration, 60 seconds for demonstration purposes
-            let expiration = {
-                EX: 60,
-                NX: true
-            }
-            await redisUtil.redisClient.set(area, JSON.stringify(results), expiration)
-            console.log(`- Alert results for ${area} have been cached.`)
+            throw new Error("ServerError")
         }
 
         // Send the results to the controller

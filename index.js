@@ -7,7 +7,7 @@ const express = require("express")
 dotenv.config()
 
 // Set up port
-const PORT = process.env.PORT || 3000
+const port = process.env.PORT || 3000
 
 // Set up Express
 const app = express()
@@ -19,6 +19,6 @@ app.use(express.urlencoded({ extended: true }))
 app.use(router)
 
 // Start the server
-app.listen(PORT, () => {
-    console.log("Listening on port " + PORT)
+app.listen(port, () => {
+    console.log("Server listening on port " + port)
 })
