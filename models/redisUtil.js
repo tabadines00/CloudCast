@@ -3,35 +3,15 @@ const redis = require("redis")
 // Create Redis Client to interface with Redis
 let redisClient
 (async () => {
+    // Attempt to connect to localhost on port 6379 by default
     redisClient = redis.createClient()
-    redisClient.on("error", (error) => console.error(`Error: ${error}`))
+    redisClient.on("error", (error) => {
+        console.error(error.toString())
+    })
     await redisClient.connect()
 })()
 
+// Export redisClient to access redis from the model layer
 module.exports = {
     redisClient
 }
-
-// // Middleware function to handle caching
-// async function cacheData(req, res, next) {
-//     const area = req.query.area
-//     let results
-
-//     try {
-//         const cachedResults = await redisClient.get(area)
-//         if(cachedResults) {
-//             results = JSON.parse(cachedResults)
-//             console.log(`Alert results for ${area} have been retrieved from cache.`)
-//             res.send({
-//                 fromCache: true,
-//                 data: results,
-//             })
-
-//         } else {
-//             next()
-//         }
-//     } catch(error) {
-//         console.error(error)
-//         res.status(404)
-//     }
-// }
